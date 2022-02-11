@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<!-- 穿梭器 -->
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			*{padding: 0px; margin: 0px; list-style: none;}
+			.transfer{width: 654px; margin: 50px auto;}
+			.transfer ul, .transfer .btns{float: left;}
+			.transfer ul{width: 300px; height: 400px; border: 1px solid #666;}
+			.transfer ul li{line-height: 30px; padding-left: 10px;}
+			.transfer ul li:hover{background-color: #FFA500;}
+			.transfer .btns{width: 50px; padding-top: 160px;}
+			.transfer .btns button{
+				display: block;
+				width: 40px;
+				margin: 0 auto;
+				height: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="transfer">
+			<ul></ul>
+			<div class="btns">
+				<button disabled>&gt;&gt;</button>
+				<button disabled>&lt;&lt;</button>
+			</div>
+			<ul></ul>
+		</div>
+		
+		<script>
+			const data1=['aaa','bbb','ccc','ddd','eee','fff','ggg'];
+			const data2=['111','222','333'];
+			
+			const aUl=document.querySelectorAll('.transfer ul');
+			const aBtn=document.querySelectorAll('.transfer .btns button');
+			// console.log(aUl);
+			
+			fillData(data1, aUl[0], aBtn[0]);
+			fillData(data2, aUl[1], aBtn[1]);
+			
+			
+			function fillData(data, parent, btn){
+				let selectedCount=0;
+				parent.innerHTML='';
+				for(let i=0; i<data.length; i++){
+					let oLi=document.createElement('li');
+					oLi.innerHTML=`
+						<label>
+							<input type="checkbox">
+							<span>${data[i]}</span>
+						</label>
+					`;
+					parent.appendChild(oLi);
+					let ch=oLi.getElementsByTagName('input')[0];
+					ch.onclick=function(){
+						if(this.checked){
+							selectedCount++;
+						}else{
+							selectedCount--;
+						}
+						// console.log(selectedCount);
+						if(selectedCount>0){
+							btn.disabled=false;
+						}else{
+							btn.disabled=true;
+						}
+					}
+				}
+			}
+			
+			
+			//添加穿梭
+			addClick(aBtn[0], aUl[0], aUl[1], data1, data2);
+			addClick(aBtn[1], aUl[1], aUl[0], data2, data1);
+			
+			function addClick(btn, from, to, fromArr, toArr){
+				btn.onclick=function(){
+					let aCh=from.getElementsByTagName('input');
+					
+					for(let i=0; i<aCh.length; i++){
+						if(aCh[i].checked){
+							aCh[i].checked=false;
+							to.appendChild(aCh[i].parentNode.parentNode);
+							
+							
+							let n=fromArr[i];
+							fromArr.splice(i, 1);
+							toArr.push(n);
+							i--;
+						}
+					}
+					btn.disabled=true;
+					
+					fillData(data1, aUl[0], aBtn[0]);
+					fillData(data2, aUl[1], aBtn[1]);
+				}
+			}
+		</script>
+	</body>
+</html>
